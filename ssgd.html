@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>高德地图批量标注点位和导航示例</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=1be3b0f00b526c4eb0432536fb361923"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/ui/1.0/main.js"></script>
+</head>
+<body>
+    <div id="mapContainer" style="width: 100%; height: 500px;"></div>
+    <script type="text/javascript">
+        // 初始化地图
+        var map = new AMap.Map('mapContainer', {
+            zoom: 10,
+            center: [113.264385, 23.129112]  // 初始地图中心点（广州）
+        });
+
+        // 示例数据，从JSON文件读取数据替换这里的硬编码
+        var branchLocations = [
+    {
+        "name": "中国农业银行股份有限公司广州瑞康路支行",
+        "location": "94.878186,39.510748"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州珠江华侨农场支行",
+        "location": "98.501147,39.731580"
+    },
+    {
+        "name": "广州花都支行",
+        "location": "113.220125,23.404326"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州东湖西路支行",
+        "location": "113.286275,23.117670"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州石牌支行",
+        "location": "113.339825,23.139457"
+    },
+    {
+        "name": "交通银行广州流花支行",
+        "location": "113.253988,23.146154"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州新港中路支行",
+        "location": "113.324945,23.096188"
+    },
+    {
+        "name": "广州越秀支行",
+        "location": "113.267065,23.128673"
+    },
+    {
+        "name": "广州荔湾支行",
+        "location": "113.218998,23.107123"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州番禺德安支行",
+        "location": "94.878186,39.510748"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州逸景翠园支行",
+        "location": "113.307656,23.083728"
+    },
+    {
+        "name": "交通银行广州沙泰支行",
+        "location": "113.264499,23.130061"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州林和西路支行",
+        "location": "113.323832,23.147883"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州花都金狮支行",
+        "location": "94.878186,39.510748"
+    },
+    {
+        "name": "中国民生银行股份有限公司广州轻纺城支行",
+        "location": "113.809235,34.740935"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州龙洞支行",
+        "location": "113.367279,23.197202"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州增城卫山支行",
+        "location": "113.610207,23.120023"
+    },
+    {
+        "name": "广州人民中路支行",
+        "location": "113.253233,23.120779"
+    },
+    {
+        "name": "广州市广州分行营业部",
+        "location": "113.343002,23.186445"
+    },
+    {
+        "name": "交通银行广东省分行营业部",
+        "location": "113.266887,23.133306"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州花都汽车城支行",
+        "location": "113.132862,23.367553"
+    },
+    {
+        "name": "中国民生银行股份有限公司广州海珠支行",
+        "location": "113.809235,34.740935"
+    },
+    {
+        "name": "中国建设银行股份有限公司广州赤岗支行",
+        "location": "99.167189,25.119869"
+    },
+    {
+        "name": "中国银行广州石井支行",
+        "location": "113.131457,23.444591"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州花都狮岭支行",
+        "location": "111.029422,27.111347"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州富力盈信大厦支行",
+        "location": "113.321881,23.125220"
+    },
+    {
+        "name": "中国建设银行股份有限公司广州云苑新村支行",
+        "location": "99.167189,25.119869"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州晓港中马路支行",
+        "location": "113.283956,23.091449"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州西湾东支行",
+        "location": "113.243286,23.141169"
+    },
+    {
+        "name": "中国建设银行股份有限公司广州永福支行",
+        "location": "113.667826,23.367259"
+    },
+    {
+        "name": "中国银行广州花都花东支行",
+        "location": "113.336754,23.433765"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州花都凤凰北路支行",
+        "location": "113.233960,23.404399"
+    },
+    {
+        "name": "中国民生银行股份有限公司广州越华支行",
+        "location": "113.361849,23.332077"
+    },
+    {
+        "name": "中信银行股份有限公司广州北京路支行",
+        "location": "113.268914,23.124091"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州番禺平康支行",
+        "location": "113.383917,22.937560"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州石溪支行",
+        "location": "113.410683,23.107864"
+    },
+    {
+        "name": "交通银行广州永福支行",
+        "location": "113.300025,23.145936"
+    },
+    {
+        "name": "中信银行股份有限公司广州开发区支行",
+        "location": "113.445553,23.161467"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州钟落潭支行",
+        "location": "113.388388,23.365648"
+    },
+    {
+        "name": "交通银行广州海珠支行",
+        "location": "113.343064,23.105408"
+    },
+    {
+        "name": "中国农业银行股份有限公司广州龙归支行",
+        "location": "113.308892,23.279723"
+    },
+    {
+        "name": "中国工商银行股份有限公司广州花都城区支行",
+        "location": "115.851656,28.684973"
+    }
+];
+
+        branchLocations.forEach(function(branch) {
+            var location = branch.location.split(',');
+            var marker = new AMap.Marker({
+                position: new AMap.LngLat(location[0], location[1]),
+                title: branch.name,
+                map: map
+            });
+
+            // 添加点击事件，显示导航链接
+            AMap.event.addListener(marker, 'click', function() {
+                var end = marker.getPosition();
+                var endStr = end.getLng() + ',' + end.getLat();
+
+                // 使用高德地图APP的导航功能
+                // 检查是否在手机上，如果是则使用callnative=1参数调用高德地图APP
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    window.location.href = `androidamap://route?sourceApplication=appname&dlat=${end.getLat()}&dlon=${end.getLng()}&dname=${branch.name}&dev=0&t=0`;
+                } else {
+                    window.open(`https://uri.amap.com/navigation?to=${endStr}&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
